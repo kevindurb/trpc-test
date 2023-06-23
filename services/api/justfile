@@ -1,0 +1,37 @@
+set dotenv-load
+
+default: setup
+
+clean:
+  rm -rf node_modules
+  rm -rf dist
+
+setup: install cp-env generate-keys seed
+
+install:
+  npm install
+
+cp-env:
+  cp ./sample.env ./.env
+
+generate-keys:
+  openssl genpkey -algorithm RSA -out ./keys/private.pem
+  openssl rsa -in ./keys/private.pem -outform PEM -pubout -out ./keys/public.pem
+
+seed:
+  npx ts-node ./src/seed.ts
+
+lint:
+  npx eslint ./src ./*.ts ./*.json
+
+fix:
+  npx eslint --fix ./src ./*.ts ./*.json
+
+check args="":
+  npx tsc --noEmit --pretty --preserveWatchOutput {{args}}
+
+dev:
+  npx nodemon
+
+build $NODE_ENV="production":
+  npx tsc
