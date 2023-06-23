@@ -35,3 +35,6 @@ dev:
 
 build $NODE_ENV="production":
   npx tsc
+
+pgtyped:
+    npx pgtyped -w -c ./pgtyped.json
